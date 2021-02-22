@@ -30,6 +30,7 @@ const ContactState = ({ children }) => {
         type: 'professional',
       },
     ],
+    filtered: null,
     current: null,
   };
 
@@ -38,6 +39,10 @@ const ContactState = ({ children }) => {
   const addContact = (contact) => {
     contact.id = uuidv4();
     dispatch({ type: ADD_CONTACT, payload: contact });
+  };
+
+  const updateContact = (contact) => {
+    dispatch({ type: UPDATE_CONTACT, payload: contact });
   };
 
   const deleteContact = (id) => {
@@ -51,21 +56,28 @@ const ContactState = ({ children }) => {
   const clearCurrentContact = () => {
     dispatch({ type: CLEAR_CURRENT_CONTACT });
   };
-  //DELETE_CONTACT
-  //SET_CURRENT_CONTACT
-  //CLEAR_CURRENT_CONTACT
-  //FILTER_CONTACTS
-  //CLEAR_FILTER
+
+  const filterContacts = (filter) => {
+    dispatch({ type: FILTER_CONTACTS, payload: filter });
+  };
+
+  const clearFilteredContacts = () => {
+    dispatch({ type: CLEAR_FILTER });
+  };
 
   return (
     <ContactContext.Provider
       value={{
         contacts: state.contacts,
         current: state.current,
+        filtered: state.filtered,
         addContact,
+        updateContact,
         deleteContact,
         setCurrentContact,
         clearCurrentContact,
+        filterContacts,
+        clearFilteredContacts,
       }}
     >
       {children}
