@@ -22,6 +22,17 @@ const Navbar = ({ title, icon }) => {
             About
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/register" activeClassName="active">
+            Register
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/login" activeClassName="active">
+            Login
+          </NavLink>
+        </li>
+        <li>Logout (todo)</li>
       </ul>
     </div>
   );

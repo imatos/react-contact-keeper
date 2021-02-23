@@ -36,11 +36,11 @@ const ContactForm = () => {
     event.preventDefault();
     if (current) {
       updateContact(contact);
+      onClearHandler();
     } else {
       addContact(contact);
+      setContact(formInitialState);
     }
-
-    onClearHandler();
   };
 
   const onClearHandler = () => {
