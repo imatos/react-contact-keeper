@@ -13,6 +13,7 @@ import {
 } from '../types';
 
 import axios from 'axios';
+import setAuthToken from '../../utils/setAuthToken';
 
 const AuthState = ({ children }) => {
   const initialState = {
@@ -35,9 +36,43 @@ const AuthState = ({ children }) => {
     try {
       const res = await axios.post('/api/users', formData, config);
       dispatch({ type: REGISTER_SUCCESS, payload: res.data });
+      loadUser();
     } catch (error) {
       dispatch({ type: REGISTER_FAIL, payload: error.response.data.message });
     }
+  };
+
+  const login = async (formData) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const res = await axios.post('/api/auth', formData, config);
+      dispatch({ type: LOGIN_SUCCESS, payload: res.data });
+      loadUser();
+    } catch (error) {
+      dispatch({ type: LOGIN_FAIL, payload: 'Invalid Email or Password' });
+    }
+  };
+
+  const loadUser = async () => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+
+    try {
+      const res = await axios.get('/api/auth');
+      dispatch({ type: USER_LOADED, payload: res.data });
+    } catch (error) {
+      dispatch({ type: AUTH_ERROR, payload: error.response.data.message });
+    }
+  };
+
+  const logout = () => {
+    dispatch({ type: LOGOUT });
   };
 
   const clearError = () => {
@@ -54,6 +89,9 @@ const AuthState = ({ children }) => {
         error: state.error,
         register,
         clearError,
+        loadUser,
+        login,
+        logout,
       }}
     >
       {children}

@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import AuthContext from '../context/auth/AuthContext';
+import AlertContext from '../context/alert/alertContext';
 
-const Login = () => {
+const Login = (props) => {
+  const { login, clearError, error, isAuthenticated } = useContext(AuthContext);
+  const { setAlert } = useContext(AlertContext);
+
   const [user, setUser] = useState({
     email: '',
     password: '',
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      props.history.push('/');
+    }
+
+    if (error !== null) {
+      setAlert(error, 'danger');
+      clearError();
+    }
+  }, [error, props, isAuthenticated]);
 
   const onChangeHandler = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -12,7 +28,12 @@ const Login = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    console.log(('Login submit:', user));
+
+    if (user.email === '' || user.password === '') {
+      setAlert('Please fill in all fields', 'danger');
+    } else {
+      login({ email: user.email, password: user.password });
+    }
   };
 
   return (
